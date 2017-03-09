@@ -1,0 +1,32 @@
+#!/bin/bash
+
+ENVS=(
+    'dev'
+    'auto'
+    'qa'
+    'prod'
+)
+
+DEV_HOSTS=(
+    'web::5.1.1.2'
+    'proc::5.1.1.7'
+    'mongo::5.3.1.8'
+)
+
+AUTO_HOSTS=(
+    'web::5.1.1.2'
+    'proc::5.1.1.7'
+    'mongo::5.3.1.8'
+)
+
+QA_HOSTS=(
+    'web::5.1.1.2'
+    'proc::5.1.1.7'
+    'mongo::5.3.1.8'
+)
+
+PROD_HOSTS=(
+    'web::5.1.1.2'
+    'proc::5.1.1.7'
+    'mongo::5.3.1.8'
+)
