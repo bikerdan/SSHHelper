@@ -35,7 +35,7 @@ getHostKeys() {
 
 # Check if env was passed via the commandline or prompt if not
 if [ "$1" == "" ] ; then
-    echo "Please enter the env type [$(getEnvKeys)]: "
+    echo "Please enter the env type [$(getEnvKeys), ip]: "
     read ENVTYPE
 else
     ENVTYPE="$1"
@@ -53,10 +53,13 @@ fi
 if [ "$ENVTYPE" == "prod" ] ; then
     HOSTS=("${PROD_HOSTS[@]}")
 fi
+if [ "$ENVTYPE" == "ip" ] ; then
+    IP="$2"
+fi
 
 # Check if host was passed via the commandline or prompt if not
 if [ "$2" == "" ] ; then
-    echo "Please enter the box type [$(getHostKeys)]: "
+    echo "Please enter the box type or IP address [$(getHostKeys)]: "
     read HOSTNAME
 else
     HOSTNAME="$2"
@@ -76,28 +79,42 @@ else
     echo "$FROM and $TO"
 fi
 
-
-# Find the IP for the given box
-IP=""
+IP="$HOSTNAME"
+USER="$DEFAULT_USER"
+SSH_KEY="$DEFAULT_SSH_KEY"
+IFS='|'
 for index in "${HOSTS[@]}" ; do
-    KEY="${index%%::*}"
-    if [ "$HOSTNAME" == "$KEY" ] ; then
-        IP="${index##*::}"
+    arrIN=($index)
+    if [ "$HOSTNAME" == "${arrIN[0]}" ] ; then
+        IP="${arrIN[1]}"
+        if [ "${arrIN[2]}" ] ; then
+            USER="${arrIN[2]}"
+        fi
+        if [ "${arrIN[3]}" ] ; then
+            SSH_KEY="${arrIN[3]}"
+        fi
     fi
 done
+unset IFS
+
 
 if [ "$IP" == "" ] ; then
-    echo "Invalid box type [$HOSTNAME]"
+    echo "Invalid box type [HOSTNAME: $HOSTNAME  --  IP: $IP]"
 else 
-    echo "Connecting to [$HOSTNAME] in the [$ENVTYPE] environment at [$IP]"
+    echo "============"
+    echo "KEY: $HOSTNAME  --  ENV: $ENVTYPE  --  USER: $USER  --  IP: $IP  --  SSH_KEY: $SSH_KEY"
 
     # If arguments 3 and 4 are passed in, we will be doing an SCP instead of SSH
     if [ "$FROM" -a "$TO" ] ; then
-        echo "scp -i ~/.ssh/$PRIVATE_SSH_KEY $FROM $USER@$IP:$TO"
-        scp -i ~/.ssh/$PRIVATE_SSH_KEY $FROM $USER@$IP:$TO
+        echo "scp -rpi ~/.ssh/$SSH_KEY $FROM $USER@$IP:$TO"
+        echo "============"
+        echo ""
+        scp -rpi ~/.ssh/$SSH_KEY $FROM $USER@$IP:$TO
     else
-        echo "ssh -i ~/.ssh/$PRIVATE_SSH_KEY $USER@$IP"
-        ssh -i ~/.ssh/$PRIVATE_SSH_KEY $USER@$IP    
+        echo "ssh -i ~/.ssh/$SSH_KEY $USER@$IP"
+        echo "============"
+        echo ""
+        ssh -i ~/.ssh/$SSH_KEY $USER@$IP    
     fi
 
 fi
