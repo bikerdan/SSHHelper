@@ -1,5 +1,9 @@
 #!/bin/bash
 
+DEFAULT_SSH_KEY=somesshkey
+
+DEFAULT_USER=someuser
+
 ENVS=(
     'dev'
     'auto'
@@ -8,25 +12,27 @@ ENVS=(
 )
 
 DEV_HOSTS=(
-    'web::5.1.1.2'
-    'proc::5.1.1.7'
-    'mongo::5.3.1.8'
+    'web|5.1.1.2'
+    'proc|5.1.1.7'
+    'mongo|5.3.1.8'
 )
 
 AUTO_HOSTS=(
-    'web::5.1.1.2'
-    'proc::5.1.1.7'
-    'mongo::5.3.1.8'
+    'web|5.1.1.2'
+    'proc|5.1.1.7'
+    'mongo|5.3.1.8'
 )
 
 QA_HOSTS=(
-    'web::5.1.1.2'
-    'proc::5.1.1.7'
-    'mongo::5.3.1.8'
+    'web|5.1.1.2'
+    'proc|5.1.1.7'
+    'mongo|5.3.1.8'
 )
 
 PROD_HOSTS=(
-    'web::5.1.1.2'
-    'proc::5.1.1.7'
-    'mongo::5.3.1.8'
+    'web|5.1.1.2'
+    'proc|5.1.1.7'
+    'mongo|5.3.1.8'
+    'hostname1|555.55.55.55|someotheruser|someotherkey.pem'
+    'hostname2|555.55.55.56|someotheruser'
 )
