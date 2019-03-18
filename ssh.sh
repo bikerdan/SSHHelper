@@ -12,7 +12,7 @@ getEnvKeys() {
         else
             COMMA=""
         fi
-        KEY="${index%%::*}"
+        KEY="${index%%|*}"
         echo -n "$KEY$COMMA"
         ((X++))
     done
@@ -27,7 +27,7 @@ getHostKeys() {
         else
             COMMA=""
         fi
-        KEY="${index%%::*}"
+        KEY="${index%%|*}"
         echo -n "$KEY$COMMA"
         ((X++))
     done
@@ -111,10 +111,17 @@ else
         echo ""
         scp -rpi ~/.ssh/$SSH_KEY $FROM $USER@$IP:$TO
     else
-        echo "ssh -i ~/.ssh/$SSH_KEY $USER@$IP"
-        echo "============"
-        echo ""
-        ssh -i ~/.ssh/$SSH_KEY $USER@$IP    
+        if [ "$COMMAND" != "" ] ; then
+            echo "ssh -i ~/.ssh/$SSH_KEY $USER@$IP $COMMAND"
+            echo "============"
+            echo ""
+            ssh -i ~/.ssh/$SSH_KEY $USER@$IP $COMMAND   
+        else 
+            echo "ssh -i ~/.ssh/$SSH_KEY $USER@$IP"
+            echo "============"
+            echo ""
+            ssh -i ~/.ssh/$SSH_KEY $USER@$IP    
+        fi
     fi
 
 fi
